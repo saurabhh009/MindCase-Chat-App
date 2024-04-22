@@ -25,7 +25,7 @@ export default function Login() {
     const handleSignIn = async () => {
         setError('');
         try {
-            const response = await fetch("http://localhost:4000/login", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

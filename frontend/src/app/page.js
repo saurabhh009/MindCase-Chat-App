@@ -45,7 +45,7 @@ export default function Home() {
     const handleSignUp = async () => {
         setError('');
         try {
-            const response = await fetch("http://localhost:4000/users", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

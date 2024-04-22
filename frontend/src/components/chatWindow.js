@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react';
 import styles from '../components/chatWindow.module.css';
 import axios from 'axios';
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+
+console.log(OPENAI_API_KEY)
 
 const systemMessage = {
   role: "system",
@@ -23,11 +25,12 @@ export default function ChatWindow() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [newAiReply, setNewAiReply]=useState("");
 
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const { data } = await axios.get('http://localhost:4000/chats');
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/chats`);
         if (data && data.chatid) {
           setSelectedChat(data.chatid);
         }
@@ -55,7 +58,7 @@ export default function ChatWindow() {
 
     if (!selectedChat) {
       try {
-        const { data } = await axios.post('http://localhost:4000/chats', {
+        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/chats`, {
           title: 'New Chat',
           userid: localStorage.getItem('userid')
         });
@@ -66,11 +69,12 @@ export default function ChatWindow() {
     }
 
     try {
-      await axios.post('http://localhost:4000/save-message', {
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/save-message`, {
         chatid: selectedChat,
         messagetext: inputValue,
-        aireply: "Due to not being open-source, I did not connect to OpenAI"
+        aireply: newAiReply
       });
+      setNewAiReply(data.choices[0].message.conten)
     } catch (error) {
       console.error('Error saving message:', error);
     }
@@ -95,6 +99,7 @@ export default function ChatWindow() {
       });
 
       const { data } = response;
+      console.log(data)
       if (data.choices && data.choices.length > 0) {
         setMessages([
           ...chatMessages,

@@ -12,7 +12,7 @@ export default function Sidebar() {
 
   const fetchChats = async () => {
     try {
-      const response = await axios.get('/chats');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/chats`);
       const allChats = response.data.chats;
       const todayChats = [];
       const yesterdayChats = [];
